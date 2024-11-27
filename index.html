@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>후각 수용체 활성화</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        td {
+            cursor: pointer;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+        td.active {
+            background-color: #90caf9;
+            color: white;
+            font-weight: bold;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            color: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+    <h1>후각 수용체와 유전자 조절 물질 활성화</h1>
+    <p>각 셀을 클릭하여 후각 수용체와 유전자 조절 물질의 활성화를 선택하세요. 결과가 아래에 표시됩니다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>후각 수용체\유전자 조절 물질</th>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>d</th>
+                <th>e</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>A</th>
+                <td onclick="selectActivation('A', 'a', this)"></td>
+                <td onclick="selectActivation('A', 'b', this)"></td>
+                <td onclick="selectActivation('A', 'c', this)"></td>
+                <td onclick="selectActivation('A', 'd', this)"></td>
+                <td onclick="selectActivation('A', 'e', this)"></td>
+            </tr>
+            <tr>
+                <th>B</th>
+                <td onclick="selectActivation('B', 'a', this)"></td>
+                <td onclick="selectActivation('B', 'b', this)"></td>
+                <td onclick="selectActivation('B', 'c', this)"></td>
+                <td onclick="selectActivation('B', 'd', this)"></td>
+                <td onclick="selectActivation('B', 'e', this)"></td>
+            </tr>
+            <tr>
+                <th>C</th>
+                <td onclick="selectActivation('C', 'a', this)"></td>
+                <td onclick="selectActivation('C', 'b', this)"></td>
+                <td onclick="selectActivation('C', 'c', this)"></td>
+                <td onclick="selectActivation('C', 'd', this)"></td>
+                <td onclick="selectActivation('C', 'e', this)"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="results">
+        활성화된 상태: 없음
+    </div>
+
+    <script>
+        const results = document.getElementById('results');
+        const activations = {}; // 각 후각 수용체의 활성화 상태 저장
+
+        // 활성화 결과와 향 민감도 맵핑
+        const scentMap = {
+            "A_a": "레몬 향에 민감한 후각수용체 A",
+            "A_b": "나무 향에 민감한 후각수용체 A",
+            "A_c": "꽃 향에 민감한 후각수용체 A",
+            "A_d": "레몬 향에 둔감한 후각수용체 A",
+            "A_e": "화학물질 향에 민감한 후각수용체 A",
+            "B_a": "나무 향에 둔감한 후각수용체 B",
+            "B_b": "꽃 향에 민감한 후각수용체 B",
+            "B_c": "바닐라 향에 민감한 후각수용체 B",
+            "B_d": "꽃 향에 둔감한 후각수용체 B",
+            "B_e": "화학물질 향에 민감한 후각수용체 B",
+            "C_a": "화학물질 향에 민감한 후각수용체 C",
+            "C_b": "레몬 향에 민감한 후각수용체 C",
+            "C_c": "바닐라 향에 둔감한 후각수용체 C",
+            "C_d": "꽃 향에 민감한 후각수용체 C",
+            "C_e": "화학물질 향에 둔감한 후각수용체 C"
+        };
+
+        function selectActivation(receptor, molecule, cell) {
+            const activation = `${receptor}_${molecule}`;
+
+            // 이전 선택 해제
+            if (activations[receptor]) {
+                const prevCell = document.querySelector(`td[data-activation="${activations[receptor]}"]`);
+                if (prevCell) prevCell.classList.remove('active');
+            }
+
+            // 새로운 선택 등록
+            if (activations[receptor] === activation) {
+                delete activations[receptor]; // 동일한 셀 다시 클릭 시 해제
+            } else {
+                activations[receptor] = activation;
+                cell.classList.add('active');
+            }
+
+            // 데이터-활성화 속성으로 셀 식별
+            cell.setAttribute("data-activation", activation);
+            updateResults();
+        }
+
+        function updateResults() {
+            const activeActivations = Object.values(activations);
+            if (activeActivations.length > 0) {
+                const resultsText = activeActivations
+                    .map(activation => `${activation.split('_').join('와 ')} 활성화 -> ${scentMap[activation] || "알 수 없음"}`)
+                    .join('<br>');
+                results.innerHTML = `<strong>활성화된 상태:</strong><br>${resultsText}`;
+            } else {
+                results.textContent = '활성화된 상태: 없음';
+            }
+        }
+    </script>
+</body>
+</html>
